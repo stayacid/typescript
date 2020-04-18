@@ -1,29 +1,18 @@
-type Combine = number | string; // type alias
+let userInput: unknown; // 'any' type receive any type. 'unknown' will check type of assigned value
+let userName: string;
 
-type User = { name: string; age: number }; // alias for object
-const u1: User = { name: 'Max', age: 30 }; // this works!
+userInput = 5;
+userInput = "max"
 
-function combine(input1: Combine, input2: number | string, resultConvesion: 'as-number' | 'as-string' ) {
-  let result;
-  if (typeof input1 === 'number' && typeof input2 === 'number' || resultConvesion === 'as-number') {
-    result = +input1 + +input2;
-  } else {
-    result = input1.toString() + input2.toString()
-  }
-/*   if (resultConvesion === 'as-number') {
-    return +result
-  } else {
-    return result.toString()
-  } */
-  return result
+// userName = userInput;
+
+if (typeof userInput === 'string') {
+  userName = userInput;
 }
 
-const combinedAges = combine(30, 26, 'as-number');
-console.log(combinedAges);
+function generateError(message: string, code: number):never { // never return anything
+  throw {message, errorCode: code}
+}
 
-const combinedStringAges = combine('30', '26', 'as-number');
-console.log(combinedStringAges);
-
-const combinedNames = combine('Max', 'Anna', 'as-string');
-console.log(combinedNames);
-
+const result = generateError('An error occured!', 500);
+console.log(result);
