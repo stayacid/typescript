@@ -23,7 +23,7 @@ const person = {
   role: Role.ADMIN
 };
 
-//person.role.push('admin'); // push works for tuple
+// person.role.push('admin'); // push works for tuple
 // person.role[1] = 10; // error
 // person.role = [0, 'kek', 'pek'] // error
 

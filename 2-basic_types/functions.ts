@@ -11,6 +11,10 @@ function addAndHandle(n1:number, n2: number, cb: (num: number) => void) {
   cb(result);
 }
 
+addAndHandle(10, 20, (result) => {
+  console.log(result);
+})
+
 printResult(add(5, 12))
 
 // let combineValues : Function; // simple declaration of variable type
@@ -21,6 +25,3 @@ combineValues = add;
 
 console.log(combineValues(8, 8));
 
-addAndHandle(10, 20, (result) => {
-  console.log(result);
-})
