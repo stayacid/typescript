@@ -1,122 +1,46 @@
-// Code goes here!
-// BASE CLASS
-abstract class Department {
-  static fiscalYear = 2020
-  //name: string; // no need to make it here - do it in constructor
-  protected employees: string[] = []; // it's like in constructor 'this.employees = []' 'protected' like 'private' but avaliable in child classes
+interface AddFn { // or it can be custom type: type AddFn = (a: number, b: number) => number
+  (a: number, b: number): number
+} 
 
-  constructor(protected readonly id: string, public name: string) { // or you should declare it in the beginng and into constructor by 'this'. Public accessible everywhere
-    // console.log(Department.fiscalYear) // access static from class itself
-  }
+let add: AddFn
 
-  static createEmployee(name: string) {
-    return { name }
-  }
+add = (n1: number, n2: number) => {
+  return n1 + n2;
+}
 
-  /*describe(this: Department) { // not necessary, but help to avoid errors if we'll copy describe in other object
-    console.log(`Department (${this.id}): ${this.name}`);
-  }*/
-  abstract describe(this: Department): void // share method for all children classes but with empty body
+interface Named {
+  readonly name: string;
+  outputName?: string; // optional property
+}
 
-  addEmployee(employee: string) {
-    this.employees.push(employee)
-  }
+interface Greetable extends Named { // you can extend interface with anothers
+  greet(phrase: string): void;
+}
 
-  printEmployeeInformatiom() {
-    console.log(this.employees.length);
-    console.log(this.employees);
+// use interface
+let user1: Greetable;
+
+user1 = {
+  name: 'Max',
+  greet(phrase: string) {
+    console.log(`${phrase} ${this.name}`);
   }
 }
 
-const employee1 = Department.createEmployee('Mila') // can access static methods in class without creating new object
+user1.greet('Hi! I\'m')
 
+// use interface in class
+class Person implements Greetable { // you can implement a lot of interfaces
+  age = 30
 
-// NEW CLASS
-class ITDepartment extends Department {
-  constructor(id: string, public admins: string[]) {
-    super(id, 'IT')
+  constructor(readonly name: string) {
+
   }
 
-  describe() {
-    console.log('IT DEP');
+  greet(phrase: string) {
+    console.log(`${phrase} ${this.name} ${this.age}`);
   }
 }
 
-const it = new ITDepartment('d1', ['Max', 'Anna']);
-
-it.addEmployee('Max')
-it.addEmployee('Manu')
-// it.describe()
-it.name = 'NEW NAME'
-// it.printEmployeeInformatiom()
-
-// NEW CLASS
-class AccountingDepartment extends Department {
-  private lastReport: string;
-  private static instance: AccountingDepartment // AccountingDepartment itself but accessible fron outside
-
-  static getInstance() { // here we create singleton - class which can be create only once
-    if (this.instance) {
-      return this.instance
-    }
-    this.instance = new AccountingDepartment('d2', [])
-    return this.instance
-  }
-
-  private constructor(id: string, private reports: string[]) { // also for singleton - to prevent creating new class from this constructor
-    super(id, 'Accounting')
-    this.lastReport = reports[0]
-  }
-
-
-  // getter - to access private
-  get mostRecentReport() {
-    if (this.lastReport) {
-      return this.lastReport
-    }
-    throw new Error('No report found')
-  }
-
-  set mostRecentReport(value: string) {
-    if (!value) {
-      throw new Error('Pass a valid value')
-    }
-    this.addReport(value) 
-  }
-
-
-  describe() {
-    console.log(`Accounting Department - ID: ${this.id}`);
-  }
-
-  addEmployee(name: string) {
-    if (name === 'Max') {
-      return
-    }
-    this.employees.push(name)
-  }
-
-   addReport(text: string) {
-     this.reports.push(text)
-     this.lastReport = text
-   }
-
-   getReports() {
-     console.log(this.reports);
-   }
-}
-
-const accounting = AccountingDepartment.getInstance() // create singleton
-// accounting.employees[2] = 'Anna' // not work because 'employee' is private
-accounting.mostRecentReport = 'End report' // setter
-//accounting.addReport('rep2')
-// console.log(accounting.mostRecentReport); // getter
-
-accounting.addEmployee('Max')
-accounting.addEmployee('Manu')
-
-accounting.describe()
-
-// accounting.printEmployeeInformatiom()
-// const accountingCopy = { name: 'Kek', describe: accounting.describe}
-// accountingCopy.describe()
+const person1 = new Person('Max')
+person1.greet('Hello')
