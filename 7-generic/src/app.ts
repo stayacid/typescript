@@ -46,7 +46,7 @@ class DataStorage<T extends string | number> { // no objects here
     this.data.push(item);
   }
 
-  removeItem(item: T) {
+  removeItem(item: T) { // ADD HERE GENERIC TYPE
     if (this.data.indexOf(item) === -1) {
       return;
     }
@@ -63,3 +63,22 @@ textStorage.addItem('kek');
 textStorage.addItem('lol');
 textStorage.removeItem('kek');
 console.log(textStorage.getItems());
+
+// GENERIC UTILITY TYPE
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(title: string, description: string, date: Date): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {}; // all props are not necessary
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+const names2: Readonly<string[]> = ['Max', 'Anna'];  // no change 
+// names2.push('Manu');
+
