@@ -126,19 +126,64 @@ button?.addEventListener('click', p.showMessage) // or p.showMessage.bind(p)
 */
 
 // VALIDATION WITH DECORATORS
+interface ValidatorConfig {
+  [property: string]: { // Course: 
+    [validatableProp: string]: string[];  // title: ['string']
+  };
+}
+
+const registeredValidators: ValidatorConfig = {};
+ 
+function Required(target: object, propName: string) { // target - class Course, propName - title
+  registeredValidators[target.constructor.name] = { // Course
+    ...registeredValidators[target.constructor.name],
+    [propName]: ['required']
+  };
+}
+ 
+function PositiveNumber(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: ['positive']
+  };
+}
+
+function validate(obj: any) {
+  const objValidatorConfig = registeredValidators[obj.constructor.name];
+  if (!objValidatorConfig) {
+    return true;
+  }
+  let isValid = true;
+  for (const prop in objValidatorConfig) {
+    for (const validator of objValidatorConfig[prop]) {
+      switch (validator) {
+        case 'required':
+          isValid = isValid && !!obj[prop];
+          break;
+        case 'positive':
+          isValid = isValid && obj[prop] > 0;
+          break;
+      }
+    }
+  }
+  return isValid;
+}
+
 class Course {
+  @Required
   title: string;
+  @PositiveNumber
   price: number;
 
   constructor(t: string, p: number) {
     this.title = t;
-    this.price = p; 
+    this.price = p;
   }
 }
 
-const courseForm = document.querySelector('form')! as HTMLFormElement;
-courseForm.addEventListener('submit', e => {
-  e.preventDefault();
+const courseForm = document.querySelector('form')!;
+courseForm.addEventListener('submit', event => {
+  event.preventDefault();
   const titleEl = document.getElementById('title') as HTMLInputElement;
   const priceEl = document.getElementById('price') as HTMLInputElement;
 
@@ -146,5 +191,11 @@ courseForm.addEventListener('submit', e => {
   const price = +priceEl.value;
 
   const createdCourse = new Course(title, price);
+
+  if (!validate(createdCourse)) {
+    alert('Invalid input, please try again!');
+    return;
+  }
+  console.log(registeredValidators);
   console.log(createdCourse);
-})
+});
