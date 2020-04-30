@@ -136,7 +136,7 @@ const registeredValidators: ValidatorConfig = {};
  
 function Required(target: object, propName: string) { // target - class Course, propName - title
   registeredValidators[target.constructor.name] = { // Course
-    ...registeredValidators[target.constructor.name],
+    ...registeredValidators[target.constructor.name], 
     [propName]: ['required']
   };
 }
@@ -154,7 +154,7 @@ function validate(obj: any) {
     return true;
   }
   let isValid = true;
-  for (const prop in objValidatorConfig) {
+  for (const prop in objValidatorConfig) { // 'title', 'price'
     for (const validator of objValidatorConfig[prop]) {
       switch (validator) {
         case 'required':
@@ -199,3 +199,5 @@ courseForm.addEventListener('submit', event => {
   console.log(registeredValidators);
   console.log(createdCourse);
 });
+
+// better use ts class-validator package 
