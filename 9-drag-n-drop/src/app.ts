@@ -4,4 +4,3 @@ import { ProjectList } from './components/project-list'
 new Projectinput();
 new ProjectList('active')
 new ProjectList('finished')
-
